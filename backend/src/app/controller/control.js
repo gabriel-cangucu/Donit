@@ -1,10 +1,13 @@
 const path = require('path');
+const userManag = require('../model/user_management.js');
 
 class Control {
 
     static routes() {
         return {
-            donit: "/donit"
+            donit: "/donit",
+            home: "/home",
+            signin: "/signin"
         }
     }
 
@@ -33,6 +36,36 @@ class Control {
                     return resp.send("sucesso");  // trocar por pagina do front
                 });
             })(req, resp, next);
+        }
+    }
+
+    register() {
+        return function (req, resp) {
+            return resp.send("tela de registro"); //trocar por pagina do front
+        }
+    }
+
+    signIn() {
+        return async function (req, resp) {
+            const name = req.body.name;
+            const email = req.body.email;
+            const pass = req.body.pass;
+            const result = await userManag.userRegister(name, email, pass);
+            if (result == true) {
+                return resp.marko(templates.home);
+            }
+            else if (result == 0) {
+                return resp.marko(templates.register, { messageerro: "Já existe uma conta com este email." });
+            }
+            else {
+                return resp.marko(templates.register, { messageerro: "Não foi possível realizar o cadastro." });
+            }
+        }
+    }
+
+    home() {
+        return function (req, resp) {
+            return resp.send("home"); //trocar por pagina do front
         }
     }
 }

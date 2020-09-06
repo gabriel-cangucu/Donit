@@ -43,29 +43,29 @@ class Database {
     })
     }
 
-    // createTableLists() {
-    //     const table = 'CREATE TABLE IF NOT EXISTS donit.lists (listId INT NOT NULL AUTO_INCREMENT, taskId VARCHAR(8000) NOT NULL, type VARCHAR(20) NULL, name VARCHAR(100) NULL, PRIMARY KEY (listId)), FOREIGN KEY (userId) REFERENCES users(userId) ENGINE = InnoDB';
+     createTableLists() {
+         const table = 'CREATE TABLE IF NOT EXISTS donit.lists (listId INT NOT NULL AUTO_INCREMENT, userId INT NOT NULL, desc VARCHAR(8000) NOT NULL, type VARCHAR(20) NULL, name VARCHAR(100) NULL, PRIMARY KEY (listId)), FOREIGN KEY (userId) REFERENCES users(userId) ENGINE = InnoDB';
 
-    //     this.connection.query(table, erro => {
-    //         if (erro) {
-    //             console.log(erro);
-    //         } else {
-    //             console.log('Success on Table Lists creation!');
-    //         }
-    //     })
-    // }
+         this.connection.query(table, erro => {
+             if (erro) {
+                 console.log(erro);
+             } else {
+                 console.log('Success on Table Lists creation!');
+             }
+         })
+     }
 
-    // createTableTasks() {
-    //     const table = 'CREATE TABLE IF NOT EXISTS donit.tasks (taskId INT NOT NULL AUTO_INCREMENT, desc VARCHAR(8000) NOT NULL, date VARCHAR(10) NOT NULL, status TINYINT NOT NULL DEFAULT 0, name VARCHAR(100) NULL, limit VARCHAR(100) NULL, PRIMARY KEY (id)) FOREIGN KEY (listId) REFERENCES list(listId) ENGINE = InnoDB';
+     createTableTasks() {
+         const table = 'CREATE TABLE IF NOT EXISTS donit.tasks (taskId INT NOT NULL AUTO_INCREMENT, listId INT NOT NULL AUTO_INCREMENT, desc VARCHAR(8000) NOT NULL, creationDate DATE NOT NULL, conclusionDate DATE, done BOOLEAN NOT NULL DEFAULT FALSE, name VARCHAR(100) NULL, priority VARCHAR(100) NULL, PRIMARY KEY (id)) FOREIGN KEY (listId) REFERENCES list(listId) ENGINE = InnoDB';
 
-    //     this.connection.query(table, erro => {
-    //         if (erro) {
-    //             console.log(erro);
-    //         } else {
-    //             console.log('Success on Table Tasks creation!');
-    //         }
-    //     })
-    // }
+         this.connection.query(table, erro => {
+             if (erro) {
+                 console.log(erro);
+             } else {
+                 console.log('Success on Table Tasks creation!');
+             }
+         })
+     }
 }
 
 module.exports = new Database;

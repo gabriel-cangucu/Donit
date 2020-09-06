@@ -12,8 +12,18 @@ class UserDao {
                 if (erro) return reject('Email not found');
                 return resolve(user[0]);
             });
-        }
-        )
+        });
+    }
+
+    register(name, email, pass) {
+        return new Promise((resolve, reject) => {
+            const sql = 'INSERT INTO users SET email=?, password=?, name=?';
+
+            this._connection.query(sql, [email, pass, name], (erro, result) => {
+                if (erro) return reject('Register Error!');
+                return resolve(result);
+            });
+        });
     }
 };
 
