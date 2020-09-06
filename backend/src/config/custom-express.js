@@ -15,8 +15,6 @@ global.authenticationMiddleware = () => {
 module.exports = () => {
     const app = express();
 
-    //Conferir com o front se eles precisam de uma pasta para static
-    //app.use('/static', express.static('src/app/public'));
     app.use(bodyParser.urlencoded({ extended: true }));
 
     authentication(app);
