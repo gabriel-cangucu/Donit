@@ -1,5 +1,6 @@
 const path = require('path');
 const userManag = require('../model/user_management.js');
+const listManag = require('../model/list_management.js');
 
 class Control {
 
@@ -55,17 +56,24 @@ class Control {
                 return resp.marko(templates.home);
             }
             else if (result == 0) {
-                return resp.marko(templates.register, { messageerro: "Já existe uma conta com este email." });
+                return resp.marko(templates.register, { messageerro: "JÃ¡ existe uma conta com este email." });
             }
             else {
-                return resp.marko(templates.register, { messageerro: "Não foi possível realizar o cadastro." });
+                return resp.marko(templates.register, { messageerro: "NÃ£o foi possÃ­vel realizar o cadastro." });
             }
         }
     }
 
     home() {
-        return function (req, resp) {
-            return resp.send("home"); //trocar por pagina do front
+        return async function (req, resp) {
+            const userid = req.query.id;
+            const lists = await listManag.getLists(userid);
+            if(!lists){
+                return resp.send("No lists were found") //trocar por pagina do front
+            }
+            else{
+                return resp.json(lists);
+            }
         }
     }
 }
