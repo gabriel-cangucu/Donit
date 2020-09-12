@@ -88,6 +88,7 @@ export default {
   },
   methods: {
     realizarLogin () {
+      this.$router.push({ name: 'Listas', params: { login: this.login }})
       loginService.login()
         .then(() => {
           this.$q.notify({

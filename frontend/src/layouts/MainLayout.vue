@@ -23,81 +23,147 @@
       bordered
       content-class="bg-grey-1"
     >
-      <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
+      <q-item clickable @click="form = true">
+        <q-item-section avatar>
+          <q-icon name="add" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>Criar Lista</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-list v-if="categoriesWithLists.length > 0">
+        <q-expansion-item
+          expand-separator
+          v-for="category in categoriesWithLists"
+          :key="category.id"
+          :icon="category.icon"
+          :label="category.label"
         >
-          <q-item clickable v-close-popup to="/login">
-            <q-item-section avatar>
-              <q-icon name="exit_to_app" />
-            </q-item-section>
+          <q-item
+            v-for="list in category.lists"
+            :key="list.id"
+            clickable
+            @click="selectedList = list"
+          >
             <q-item-section>
-              <q-item-label>Sair</q-item-label>
+              <q-item-label>{{ list.name }}</q-item-label>
             </q-item-section>
           </q-item>
-        </q-item-label>
+          <q-separator />
+        </q-expansion-item>
       </q-list>
+      <q-item v-else>
+        Você ainda não possui listas cadastradas!
+      </q-item>
+      <q-item clickable v-close-popup to="/login">
+        <q-item-section avatar>
+          <q-icon name="exit_to_app" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>Sair</q-item-label>
+        </q-item-section>
+      </q-item>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view :selectedList="selectedList" />
     </q-page-container>
+    <q-dialog v-model="form" >
+      <todo-list-form @salvarLista="salvarLista" :categories="categories" />
+    </q-dialog>
   </q-layout>
 </template>
 
 <script>
-
-const linksData = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
+import TodoListForm from '../components/TodoListForm'
 
 export default {
   name: 'MainLayout',
+  components: {
+    'todo-list-form': TodoListForm
+  },
   data () {
     return {
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
+      form: false,
+      selectedList: null,
+      categories: []
+    }
+  },
+  created () {
+    this.categories = [
+      {
+        id: 0,
+        icon: 'local_grocery_store',
+        label: 'Lista de compras',
+        lists: []
+      },
+      {
+        id: 1,
+        icon: 'fitness_center',
+        label: 'Atividades físicas',
+        lists: []
+      },
+      {
+        id: 2,
+        icon: 'event',
+        label: 'Planejamento de eventos',
+        lists: []
+      },
+      {
+        id: 3,
+        icon: 'pets',
+        label: 'Lista de cuidados com pet',
+        lists: []
+      },
+      {
+        id: 4,
+        icon: 'work',
+        label: 'Tarefas do trabalho',
+        lists: []
+      },
+      {
+        id: 5,
+        icon: 'menu_book',
+        label: 'Lista de estudos',
+        lists: []
+      },
+      {
+        id: 6,
+        icon: 'weekend',
+        label: 'Lista de lazer',
+        lists: []
+      },
+      {
+        id: 7,
+        icon: 'flight',
+        label: 'Planejamento de viagem',
+        lists: []
+      },
+      {
+        id: 8,
+        icon: 'cleaning_services',
+        label: 'Lista para faxina',
+        lists: []
+      },
+      {
+        id: 9,
+        icon: 'self_improvement',
+        label: 'Lista de desenvolvimento pessoal',
+        lists: []
+      }
+    ]
+  },
+  computed: {
+    categoriesWithLists () {
+      return this.categories.filter(c => c.lists.length > 0)
+    }
+  },
+  methods: {
+    salvarLista (newList) {
+      const selected = this.categories.find(el => el.id == newList.category)
+      selected.lists.push(newList)
+      this.form = false
     }
   }
 }
