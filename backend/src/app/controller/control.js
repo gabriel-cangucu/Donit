@@ -76,6 +76,28 @@ class Control {
             }
         }
     }
+    
+    //pegar todos os dados que uma lista tem
+    createList() {
+        return async function (req, resp) {
+            const userid = req.query.id;
+            const list = await listManag.createLists(userid);
+            if(!lists){
+                return resp.send("No lists were found") //trocar por pagina do front
+            }
+            else{
+                return resp.json(lists);
+            }
+        }
+    }
+
+    deleteList() {
+        return async function (req, resp) {
+            const listid = req.query.id;
+            await listManag.deleteList(listid);
+            return resp.status(204);
+        }
+    }
 }
 
 module.exports = Control;

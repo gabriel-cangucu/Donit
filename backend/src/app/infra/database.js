@@ -7,8 +7,8 @@ class Database {
 
       this.createSchema();
       this.createTableUsers();
-      //this.createTableLists();
-      //this.createTableTasks();
+      this.createTableLists();
+      this.createTableTasks();
   }
 
   createSchema() {
