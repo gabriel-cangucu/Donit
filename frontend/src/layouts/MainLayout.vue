@@ -184,7 +184,6 @@ export default {
         })
         .catch(error => {
           this.$q.loading.hide()
-          console.log(error)
           if (error.response.status != 403) {
             this.$q.notify({
               message: 'Algum ocorreu durante a operação!',
