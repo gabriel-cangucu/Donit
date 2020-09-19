@@ -88,9 +88,11 @@ export default {
   },
   methods: {
     realizarLogin () {
-      this.$router.push({ name: 'Listas', params: { login: this.login }})
-      loginService.login()
-        .then(() => {
+      loginService.login({
+        email: this.login,
+        password: this.senha
+      })
+        .then((response) => {
           this.$q.notify({
             message: 'Donit up!',
             type: 'positive',
