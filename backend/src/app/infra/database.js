@@ -44,7 +44,7 @@ class Database {
     }
 
      createTableLists() {
-         const table = 'CREATE TABLE IF NOT EXISTS donit.lists (listId INT NOT NULL AUTO_INCREMENT, userId INT NOT NULL, desc VARCHAR(8000) NOT NULL, type VARCHAR(20) NULL, name VARCHAR(100) NULL, PRIMARY KEY (listId)), FOREIGN KEY (userId) REFERENCES users(userId) ENGINE = InnoDB';
+         const table = 'CREATE TABLE IF NOT EXISTS donit.lists (listId INT NOT NULL AUTO_INCREMENT, userId INT NOT NULL, descList VARCHAR(8000) NOT NULL, type VARCHAR(20) NULL, name VARCHAR(100) NULL, PRIMARY KEY (listId), FOREIGN KEY (userId) REFERENCES users(userId))';
 
          this.connection.query(table, erro => {
              if (erro) {
@@ -56,7 +56,7 @@ class Database {
      }
 
      createTableTasks() {
-         const table = 'CREATE TABLE IF NOT EXISTS donit.tasks (taskId INT NOT NULL AUTO_INCREMENT, listId INT NOT NULL AUTO_INCREMENT, desc VARCHAR(8000) NOT NULL, creationDate DATE NOT NULL, conclusionDate DATE, done BOOLEAN NOT NULL DEFAULT FALSE, name VARCHAR(100) NULL, priority VARCHAR(100) NULL, PRIMARY KEY (id)) FOREIGN KEY (listId) REFERENCES list(listId) ENGINE = InnoDB';
+         const table = 'CREATE TABLE IF NOT EXISTS donit.tasks (taskId INT NOT NULL AUTO_INCREMENT, listId INT NOT NULL, descTask VARCHAR(8000) NOT NULL, creationDate DATE NOT NULL, conclusionDate DATE NULL, done TINYINT(1) NOT NULL DEFAULT 0, name VARCHAR(100) NULL, priority VARCHAR(100) NULL, PRIMARY KEY (taskid), FOREIGN KEY (listId) REFERENCES lists(listId))';
 
          this.connection.query(table, erro => {
              if (erro) {
