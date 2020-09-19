@@ -11,12 +11,12 @@
               </div>
               <q-form class="full-width q-px-md column wrap justify-center items-center content-center" @submit="realizarLogin" >
                 <div class="q-py-md full-width">
-                  <q-input outlined standout="bg-primary text-white" v-model="login" label="Login" :rules="[ruleFieldNotEmpty]" />
+                  <q-input outlined standout="bg-primary text-white" v-model="email" label="E-mail" :rules="[ruleFieldNotEmpty]" />
                 </div>
                 <div class="q-py-md full-width">
-                  <q-input type="password" outlined standout="bg-primary text-white" v-model="senha" label="Senha" :rules="[ruleFieldNotEmpty]" />
+                  <q-input type="password" outlined standout="bg-primary text-white" v-model="pass" label="Senha" :rules="[ruleFieldNotEmpty]" />
                 </div>
-                <q-btn round color="primary" icon="arrow_right_alt" size="lg" type="submit">
+                <q-btn round color="primary" icon="arrow_right_alt" size="lg" type="submit" :loading="loading">
                   <q-tooltip anchor="top middle" self="center middle">
                     Clique para logar
                   </q-tooltip>
@@ -41,10 +41,13 @@
                   Preencha os campos abaixo para realizar o cadastro.
                 </div>
                 <div class="q-pt-md full-width q-px-md">
-                  <q-input outlined standout="bg-primary text-white" v-model="login" label="Login" :rules="[ruleFieldNotEmpty]" />
+                  <q-input outlined standout="bg-primary text-white" v-model="email" label="E-mail" :rules="[ruleFieldNotEmpty]" />
+                </div>
+                <div class="q-pt-md full-width q-px-md">
+                  <q-input outlined standout="bg-primary text-white" v-model="name" label="Nome" :rules="[ruleFieldNotEmpty]" />
                 </div>
                 <div class="full-width q-px-md">
-                  <q-input type="password" outlined standout="bg-primary text-white" v-model="senha" label="Senha" :rules="[ruleFieldNotEmpty]" />
+                  <q-input type="password" outlined standout="bg-primary text-white" v-model="pass" label="Senha" :rules="[ruleFieldNotEmpty]" />
                 </div>
                 <div class="full-width q-px-md">
                   <q-input type="password" outlined standout="bg-primary text-white" v-model="confirmaSenha" label="Confirmação Senha" :rules="[ruleFieldNotEmpty, ruleEqualPasswords]" />
@@ -79,8 +82,9 @@ export default {
   name: 'login',
   data () {
     return {
-      login: '',
-      senha: '',
+      email: '',
+      name: '',
+      pass: '',
       cadastro: false,
       confirmaSenha: '',
       loading: false
@@ -88,15 +92,19 @@ export default {
   },
   methods: {
     realizarLogin () {
-      this.$router.push({ name: 'Listas', params: { login: this.login }})
-      loginService.login()
-        .then(() => {
+      this.loading = true
+      loginService.login({
+        email: this.email,
+        pass: this.pass
+      })
+        .then((response) => {
           this.$q.notify({
             message: 'Donit up!',
             type: 'positive',
             icon: 'done_all'
           })
-          this.$router.push({ name: 'Listas', params: { login: this.login }})
+          this.$router.push({ name: 'Listas'})
+          this.loading = false
         })
         .catch(err => {
           this.$q.notify({
@@ -104,16 +112,39 @@ export default {
             type: 'negative',
             icon: 'error'
           })
+          this.loading = false
         })
     },
     realizarCadastro () {
       this.loading = true
+      loginService.cadastro({
+        email: this.email,
+        name: this.name,
+        pass: this.pass
+      })
+        .then((response) => {
+          this.$q.notify({
+            message: 'Usuário cadastrado com sucesso!',
+            type: 'positive',
+            icon: 'done_all'
+          })
+          this.cadastro = false
+          this.loading = false
+        })
+        .catch(err => {
+          this.$q.notify({
+            message: 'Já existe um usuário cadastrado com esse e-mail.',
+            type: 'negative',
+            icon: 'error'
+          })
+          this.loading = false
+        })
     },
     ruleFieldNotEmpty (val) {
       return (val != null && val.length > 0) || 'Favor preencher este campo para prosseguir'
     },
     ruleEqualPasswords (val) {
-      return (val === this.senha) || 'As senhas digitadas são diferentes.'
+      return (val === this.pass) || 'As senhas digitadas são diferentes.'
     }
   }
 }

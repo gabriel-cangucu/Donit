@@ -1,7 +1,10 @@
 import axios from 'axios'
 
 export default {
-  login (login, senha) {
-    return axios.get('')
+  login (params) {
+    return axios.post('/donit', params)
+  },
+  cadastro (params) {
+    return axios.post('/cadastro', params)
   }
 }

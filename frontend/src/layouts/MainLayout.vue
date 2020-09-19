@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import listasService from '../services/listasService'
 import TodoListForm from '../components/TodoListForm'
 
 export default {
@@ -154,6 +155,9 @@ export default {
       }
     ]
   },
+  mounted () {
+    this.carregarListas()
+  },
   computed: {
     categoriesWithLists () {
       return this.categories.filter(c => c.lists.length > 0)
@@ -161,9 +165,33 @@ export default {
   },
   methods: {
     salvarLista (newList) {
-      const selected = this.categories.find(el => el.id == newList.category)
-      selected.lists.push(newList)
+      this.inserirLista(newList)
       this.form = false
+    },
+    inserirLista (list) {
+      const selected = this.categories.find(el => el.id == list.type)
+      selected.lists.push(list)
+    },
+    carregarListas () {
+      this.$q.loading.show('Carregando listas...')
+      listasService.get()
+        .then(response => {
+          const lists = response.data
+          for (let i = 0; i < lists.length; i++) {
+            this.inserirLista(lists[i])
+          }
+          this.$q.loading.hide()
+        })
+        .catch(error => {
+          this.$q.loading.hide()
+          if (error.response.status != 403) {
+            this.$q.notify({
+              message: 'Algum ocorreu durante a operação!',
+              type: 'negative',
+              icon: 'error'
+            })
+          }
+        })
     }
   }
 }

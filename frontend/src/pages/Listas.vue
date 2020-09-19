@@ -1,5 +1,5 @@
 <template>
-  <q-page class="fit row justify-center q-py-md bg-grey-2">
+  <q-page class="fit row justify-center q-py-md bg-grey-2" v-if="selectedList != null">
     <q-card class="col-8">
       <q-card-section class="bg-primary">
         <q-toolbar>
@@ -23,7 +23,7 @@ import TodoItem from '../components/TodoItem'
 import TodoItemForm from '../components/TodoItemForm'
 
 export default {
-  name: 'PageIndex',
+  name: 'ListaDeTarefas',
   props: ['selectedList'],
   components: {
     'todo-item': TodoItem,
@@ -34,11 +34,6 @@ export default {
       nome: 'Lista teste',
       form: false,
       tarefas: []
-    }
-  },
-  computed: {
-    login () {
-      return this.$route.params.login || null
     }
   },
   methods: {
