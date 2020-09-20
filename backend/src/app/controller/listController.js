@@ -25,7 +25,7 @@ class ListControl {
 
     createList() {
         return async function (req, resp) {
-            const userid = req.query.id;
+            const userId = req.query.userId;
             const name = req.body.name;
             const descList = req.body.desc;
             const type = req.body.type;
