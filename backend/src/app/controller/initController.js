@@ -1,13 +1,11 @@
 const path = require('path');
 const userManag = require('../model/user_management.js');
-const listManag = require('../model/list_management.js');
 
-class Control {
+class InitControl {
 
     static routes() {
         return {
             donit: "/donit",
-            home: "/home",
             signin: "/signin"
         }
     }
@@ -20,7 +18,6 @@ class Control {
 
     login() {
         return function (req, resp, next) {
-            console.log(req.body); //
             const passport = req.passport;
             passport.authenticate('local', (erro, user, info) => {
                 if (info) {
@@ -63,41 +60,7 @@ class Control {
             }
         }
     }
-
-    home() {
-        return async function (req, resp) {
-            const userid = req.query.id;
-            const lists = await listManag.getLists(userid);
-            if(!lists){
-                return resp.send("No lists were found") //trocar por pagina do front
-            }
-            else{
-                return resp.json(lists);
-            }
-        }
-    }
     
-    //pegar todos os dados que uma lista tem
-    createList() {
-        return async function (req, resp) {
-            const userid = req.query.id;
-            const list = await listManag.createLists(userid);
-            if(!lists){
-                return resp.send("No lists were found") //trocar por pagina do front
-            }
-            else{
-                return resp.json(lists);
-            }
-        }
-    }
-
-    deleteList() {
-        return async function (req, resp) {
-            const listid = req.query.id;
-            await listManag.deleteList(listid);
-            return resp.status(204);
-        }
-    }
 }
 
-module.exports = Control;
+module.exports = InitControl;

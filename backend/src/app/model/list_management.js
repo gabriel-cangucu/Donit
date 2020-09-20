@@ -34,8 +34,12 @@ module.exports = {
             const list = new ListDao(connection);
             const data = await list.create(userid)
                 .then(result => {
-                    return result;
+                    if (result) {
+                        return true;
+                    }
                 });
+
+            return data;
 
         } catch (error) {
             return false;

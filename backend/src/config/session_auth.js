@@ -41,7 +41,7 @@ module.exports = (app) => {
     //Serialização de usuário
     passport.serializeUser((user, done) => {
         const userSession = {
-            id: user.id
+            id: user.Id
         };
         done(null, userSession);
     });
