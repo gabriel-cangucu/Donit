@@ -28,7 +28,7 @@ class ListDao {
 
     create(userId, name, descList, type) {
         return new Promise((resolve, reject) => {
-            //arrumar query
+
             const sql = 'INSERT INTO lists SET userid=?, name=?, descList=?, type=?';
 
             this._connection.query(sql, [userId, name, descList, type], (erro, result) => {
@@ -46,7 +46,6 @@ class ListDao {
 
             this._connection.query(sql, [name, descList, type, id], (erro, result) => {
                 if (erro) {
-                    console.log(erro); //
                     return reject('Update Error!');
                 }
                 return resolve(result);

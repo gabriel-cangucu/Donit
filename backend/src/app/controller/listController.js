@@ -6,14 +6,15 @@ class ListControl {
     static routes() {
         return {
             home: "/home",
-            list: "/list"
+            list: "/list",
+            listall: "/listall"
         }
     }
 
-    home() {
+    getAll() {
         return async function (req, resp) {
-            const userid = req.query.id;
-            const result = await listManag.retrieveAll(userid);
+            const userId = req.query.userId;
+            const result = await listManag.retrieveAll(userId);
             if (result) {
                 return resp.status(200).json(result);
             }
@@ -57,8 +58,8 @@ class ListControl {
 
     deleteList() {
         return async function (req, resp) {
-            const id = req.query.id;
-            const result = await listManag.delete(id);
+            const listId = req.query.listId;
+            const result = await listManag.delete(listId);
             if (result) {
                 return resp.status(204);
             }

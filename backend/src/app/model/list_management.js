@@ -30,22 +30,24 @@ module.exports = {
     async retrieveAll(userid) {
         try {
             const list = new ListDao(connection);
-            const result = await list.getLists(id)
+            const result = await list.getLists(userid)
                 .then(data => {
                     if (data) {
                         return data;
                     }
                 });
-
-            var info = [];
-            for (var i in result) {
-                info.push({
-                    id: result[i].listId,
-                    name: result[i].name,
-                    type: result[i].type
-                });
-            }
-            return info;
+            
+                var info = [];
+                for (var i in result) {
+                    info.push({
+                        id: result[i].listId,
+                        userId: result[i].userId,
+                        name: result[i].name,
+                        desc: result[i].descList,
+                        type: result[i].type
+                    });
+                }
+                return info;
 
         } catch (erro) {
             return false;
