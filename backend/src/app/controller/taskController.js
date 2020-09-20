@@ -18,7 +18,7 @@ class TaskControl {
                 return resp.status(200).json(result);
             }
             else {
-                return resp.status(404).send("Não foi possível encontrar os dados sobre a tarefa.");
+                return resp.status(404).send("Nï¿½o foi possï¿½vel encontrar os dados sobre a tarefa.");
             }
         }
     }
@@ -31,7 +31,7 @@ class TaskControl {
                 return resp.status(200).json(result);
             }
             else {
-                return resp.status(404).send("Não foi possível encontrar as tarefas para esta lista.");
+                return resp.status(404).send("Nao foi possivel encontrar as tarefas para esta lista.");
             }
         }
     }
@@ -87,7 +87,7 @@ class TaskControl {
                 return resp.status(204);
             }
             else {
-                return resp.status(500).send("Não foi possível excluir a tarefa");
+                return resp.status(500).send("Nao foi possivel excluir a tarefa");
             }
         }
     }

@@ -3,61 +3,103 @@ const connection = require('../infra/connection.js');
 
 module.exports = {
 
-    async getLists(userid) {
+    async retrieve(id) {
         try {
             const list = new ListDao(connection);
-
-            const data = await list.locate(userid)
-                .then(result => {
-                    if (result) {
-                        return result;
-                    }
-                    else{
-                        return false;
+            const result = await list.get(id)
+                .then(data => {
+                    if (data) {
+                        return data;
                     }
                 });
 
-            if (data == false) {
-                return data;
+            const info = {
+                id: result[i].listId,
+                userid: result[i].userid,
+                name: result[i].name,
+                type: result[i].type,
+                descList: result[i].descList
             }
-            else{
-                //toDo: tratar data de forma a retornar somente os nomes
-            }
+            return info;
 
-        } catch (error) {
+        } catch (erro) {
+            return false;
+        }
+    },
+    
+    async retrieveAll(userid) {
+        try {
+            const list = new ListDao(connection);
+            const result = await list.getLists(id)
+                .then(data => {
+                    if (data) {
+                        return data;
+                    }
+                });
+
+            var info = [];
+            for (var i in result) {
+                info.push({
+                    id: result[i].listId,
+                    name: result[i].name,
+                    type: result[i].type
+                });
+            }
+            return info;
+
+        } catch (erro) {
             return false;
         }
     },
 
-    async createLists(userid) {
+    async create(userId, name, descList, type) {
         try {
             const list = new ListDao(connection);
-            const data = await list.create(userid)
-                .then(result => {
-                    if (result) {
+            const result = await list.create(userId, name, descList, type)
+                .then(data => {
+                    if (data) {
                         return true;
                     }
                 });
 
-            return data;
+            return result;
 
-        } catch (error) {
+        } catch (erro) {
             return false;
         }
     },
 
-    async deleteList(listid) {
+    async update(id, name, descList, type) {
         try {
-            //verificar se lista do usuário
             const list = new ListDao(connection);
-
-            const data = await list.erase(listid)
-                .then(result => {
-                    return result;
+            const result = await list.update(id, name, descList, type)
+                .then(data => {
+                    if (data) {
+                        console.log(data); //
+                        return true;
                     }
-                );
+                });
 
-        } catch (error) {
+            return result;
+
+        } catch (erro) {
+            return false;
+        }
+    },
+
+    async delete(id) {
+        try {
+            const list = new ListDao(connection);
+            const result = await list.erase(id)
+                .then(data => {
+                    if (data) {
+                        return true;
+                    }
+                });
+
+            return result;
+
+        } catch (erro) {
             return false;
         }
     }

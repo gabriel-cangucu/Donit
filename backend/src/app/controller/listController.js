@@ -13,35 +13,58 @@ class ListControl {
     home() {
         return async function (req, resp) {
             const userid = req.query.id;
-            const lists = await listManag.getLists(userid);
-            if (!lists) {
-                return resp.send("No lists were found") //trocar por pagina do front
+            const result = await listManag.retrieveAll(userid);
+            if (result) {
+                return resp.status(200).json(result);
             }
             else {
-                return resp.json(lists);
+                return resp.status(404).send("Nao foi possivel encontrar nenhuma lista deste usuario.");
             }
         }
     }
 
-    //pegar todos os dados que uma lista tem // não seria criar a lista?
     createList() {
         return async function (req, resp) {
             const userid = req.query.id;
-            const list = await listManag.createLists(userid);
-            if (!lists) {
-                return resp.send("No lists were found") //trocar por pagina do front
+            const name = req.body.name;
+            const descList = req.body.desc;
+            const type = req.body.type;
+            const result = await listManag.create(userId, name, descList, type);
+            if (result) {
+                return resp.status(200).send("sucesso");
             }
             else {
-                return resp.json(lists);
+                return resp.status(500).send("Houve um erro ao criar a lista.");
+            }
+        }
+    }
+
+    updateList() {
+        return async function (req, resp) {
+            const id = req.query.listId;
+            const name = req.body.name;
+            const descList = req.body.desc;
+            const type = req.body.type;
+            const result = await listManag.update(id, name, descList, type);
+            if (result) {
+                return resp.status(200).send("sucesso");
+            }
+            else {
+                return resp.status(500).send("Houve um erro ao atualizar a lista.");
             }
         }
     }
 
     deleteList() {
         return async function (req, resp) {
-            const listid = req.query.id;
-            await listManag.deleteList(listid);
-            return resp.status(204);
+            const id = req.query.id;
+            const result = await listManag.delete(id);
+            if (result) {
+                return resp.status(204);
+            }
+            else {
+                return resp.status(500).send("Nao foi possivel excluir a lista");
+            }
         }
     }
 }

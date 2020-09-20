@@ -16,8 +16,10 @@ module.exports = (app) => {
     app.post(beginRoutes.signin, begin.signIn());
 
     app.get(listRoutes.home, global.authenticationMiddleware(), list.home());
-    app.post(listRoutes.home, global.authenticationMiddleware(), list.createList());
-    app.delete(listRoutes.home, global.authenticationMiddleware(), list.deleteList());
+
+    app.post(listRoutes.list, global.authenticationMiddleware(), list.createList());
+    app.delete(listRoutes.list, global.authenticationMiddleware(), list.deleteList());
+    app.put(listRoutes.list, global.authenticationMiddleware(), list.updateList());
 
     app.get(taskRoutes.task, global.authenticationMiddleware(), task.exhibitTask());
     app.get(taskRoutes.list, global.authenticationMiddleware(), task.listTasks());
