@@ -39,6 +39,51 @@
   </q-item>
 </template>
 
+<script>
+import { date } from 'quasar'
+
+export default {
+  props: [
+    'id',
+    'name',
+    'description',
+    'done',
+    'priority',
+    'creation_date',
+    'conclusion_date',
+    'due_date'
+  ],
+  data () {
+    return {
+    }
+  },
+  watch: {
+    done (val) {
+      if (val) {
+        this.conclusion_date = new Date()
+      }
+      this.$emit('update', val)
+    }
+  },
+  computed: {
+    days_left () {
+      return this.done ? null : date.getDateDiff(this.due_date, new Date(), 'days')
+    },
+    priority_color () {
+      return this.priority === 1 ? 'primary' : this.priority === 2 ? 'warning' : 'red'
+    }
+  },
+  methods: {
+    remove () {
+      this.$emit('remove')
+    },
+    edit () {
+      this.$emit('edit')
+    }
+  }
+}
+</script>
+
 <style>
 
 </style>
