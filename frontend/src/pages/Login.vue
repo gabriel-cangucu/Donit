@@ -6,7 +6,7 @@
           <q-card-section class="full-height" :class="cadastro ? 'full-width all__transitions' : null">
             <div class="full-height column  justify-around items-end content-around"  v-if="!cadastro">
               <div class="full-width row wrap justify-center items-center content-center">
-                <q-icon class="logo__icon" name="done_all" size="8em" style="background-color: #407bff; color: white;" />
+                <q-icon class="logo__icon" name="img:icon.png" size="8em" />
                 <p style="font-size: 1.7em;" class="col-12"><span style="font-weight: 600;">Donit</span><br>Um novo jeito de se organizar</p>
               </div>
               <q-form class="full-width q-px-md column wrap justify-center items-center content-center" @submit="realizarLogin" ref="form_login" >
@@ -185,7 +185,6 @@ export default {
   font-size: 8em;
   border-radius: 35px;
   color: white;
-  background-color: rgb(64, 123, 255);
   padding: 5px;
   margin-bottom: 35px;
 }
