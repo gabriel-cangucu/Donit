@@ -21,7 +21,7 @@ class InitControl {
             const passport = req.passport;
             passport.authenticate('local', (erro, user, info) => {
                 if (info) {
-                    return resp.send("Email ou senha incorretos");  // trocar por pagina do front
+                    return resp.send(404, "Email ou senha incorretos");  // trocar por pagina do front
                 }
                 if (erro) {
                     return next(erro);
@@ -47,16 +47,16 @@ class InitControl {
         return async function (req, resp) {
             const name = req.body.name;
             const email = req.body.email;
-            const pass = req.body.pass;
+            const pass = req.body.password;
             const result = await userManag.userRegister(name, email, pass);
             if (result == true) {
-                return resp.marko(templates.home);
+                return resp.send(200, "Usuário registrado com sucesso.");
             }
             else if (result == 0) {
-                return resp.marko(templates.register, { messageerro: "Já existe uma conta com este email." });
+                return resp.send(409, "Já existe uma conta com este email.");
             }
             else {
-                return resp.marko(templates.register, { messageerro: "Não foi possível realizar o cadastro." });
+                return resp.send(500, "Não foi possível realizar o cadastro.");
             }
         }
     }

@@ -16,7 +16,7 @@ export default  ({ Vue, router }) => {
   axios.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
-    if (error.response.status == 403) {
+    if (error.response.status == 401) {
       Notify.create({
         message: 'Usuário desconectado!',
         type: 'negative',

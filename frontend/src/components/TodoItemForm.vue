@@ -10,11 +10,11 @@
         <q-input v-model="name" label="Nome" class="col-12 q-ml-sm" filled />
         <q-input v-model="description" label="Descrição" type="textarea" class="col-12 q-ml-sm" filled  />
         <div class="row col-12 q-ml-sm">
-          <q-input filled v-model="due_date" class="col-6" label="Data final" >
+          <q-input filled v-model="dueDate" class="col-6" label="Data final" >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                  <q-date mask="DD-MM-YYYY" v-model="due_date" @input="() => $refs.qDateProxy.hide()" :options="date => date >= '2020/03/10'" />
+                  <q-date mask="DD-MM-YYYY" :locale="myLocale" v-model="dueDate" @input="() => $refs.qDateProxy.hide()" :options="compareDate" />
                 </q-popup-proxy>
               </q-icon>
             </template>
@@ -55,20 +55,34 @@ export default {
       name: '',
       description: '',
       priority: 1,
-      creation_date: null,
-      conclusion_date: null,
-      due_date: null
+      creationDate: null,
+      conclusionDate: null,
+      dueDate: null,
+      myLocale: {
+        days: 'Domingo_Segunda_Terça_Quarta_Quinta_Sexta_Sábado'.split('_'),
+        daysShort: 'Dom_Seg_Ter_Qua_Qui_Sex_Sáb'.split('_'),
+        months: ['Janeiro', 'Feveiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Maio', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        firstDayOfWeek: 1
+      }
     }
   },
   mounted () {
     if (this.item) {
+      let dueDate = this.item.dueDate
+      if (dueDate != null) {
+        const parts = dueDate.split('-')
+        if (parts.length == 3) {
+          dueDate = parts[2] + '-' + parts[1] + '-' + parts[0]
+        }
+      }
       this.id = this.item.id
       this.name = this.item.name
-      this.description = this.item.description
+      this.description = this.item.desc
       this.priority = this.item.priority
-      this.creation_date = this.item.creation_date
-      this.conclusion_date = this.item.conclusion_date
-      this.due_date = this.item.due_date
+      this.creationDate = this.item.creationDate
+      this.conclusionDate = this.item.conclusionDate
+      this.dueDate = dueDate
     }
   },
   computed: {
@@ -76,16 +90,23 @@ export default {
       return this.priority === 1 ? 'primary' : this.priority === 2 ? 'warning' : 'red'
     },
     itemObject () {
-      const tempDate = this.due_date ? this.due_date.split('-') : null
+      const tempDate = this.dueDate ? this.dueDate.split('-') : null
       return {
         id: this.id,
         name: this.name,
-        description: this.description,
-        done: false,
+        desc: this.description,
         priority: this.priority,
-        creation_date: this.creation_date ? this.creation_date : new Date(),
-        conclusion_date: this.conclusion_date,
-        due_date: tempDate ? new Date(tempDate[2], tempDate[1] - 1, tempDate[0]) : null
+        creationDate: this.creationDate ? this.creationDate : new Date(),
+        conclusionDate: this.conclusionDate,
+        dueDate: tempDate ? new Date(tempDate[2], tempDate[1] - 1, tempDate[0]) : null
+      }
+    },
+    today () {
+      return Object.freeze(new Date().toLocaleDateString('pt-br').split('/').reverse().join('/'))
+    },
+    locale () {
+      return {
+        monthsShort: this.monthsShort
       }
     }
   },
@@ -99,6 +120,9 @@ export default {
         timeout: 1000,
         progress: true
       })
+    },
+    compareDate (date) {
+      return date >= this.today
     }
   }
 }

@@ -13,7 +13,7 @@ class ListControl {
 
     getAll() {
         return async function (req, resp) {
-            const userId = req.query.userId;
+            const userId = req.user.id;
             const result = await listManag.retrieveAll(userId);
             if (result) {
                 return resp.status(200).json(result);
@@ -26,7 +26,7 @@ class ListControl {
 
     createList() {
         return async function (req, resp) {
-            const userId = req.query.userId;
+            const userId = req.user.id;
             const name = req.body.name;
             const descList = req.body.desc;
             const type = req.body.type;
@@ -61,7 +61,7 @@ class ListControl {
             const listId = req.query.listId;
             const result = await listManag.delete(listId);
             if (result) {
-                return resp.status(204);
+                return resp.status(204).send('');
             }
             else {
                 return resp.status(500).send("Nao foi possivel excluir a lista");

@@ -48,6 +48,9 @@
             <q-item-section>
               <q-item-label>{{ list.name }}</q-item-label>
             </q-item-section>
+            <q-tooltip max-width="20vw">
+              {{ list.desc }}
+            </q-tooltip>
           </q-item>
           <q-separator />
         </q-expansion-item>
@@ -66,10 +69,15 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view :selectedList="selectedList" />
+      <router-view 
+        :selectedList="selectedList"
+        @update="carregarListas"
+        @edit="editLista"
+        @removeLista="selectedList = null"
+      />
     </q-page-container>
     <q-dialog v-model="form" >
-      <todo-list-form @salvarLista="salvarLista" :categories="categories" />
+      <todo-list-form @salvarLista="salvarLista" :categories="categories" :item="{...selectedList, edit}" />
     </q-dialog>
   </q-layout>
 </template>
@@ -88,6 +96,7 @@ export default {
       leftDrawerOpen: false,
       form: false,
       selectedList: null,
+      edit: false,
       categories: []
     }
   },
@@ -164,9 +173,20 @@ export default {
     }
   },
   methods: {
-    salvarLista (newList) {
-      this.inserirLista(newList)
-      this.form = false
+    salvarLista (list) {
+      const service = list.id ? listasService.update : listasService.create
+      service(list)
+        .then(result => {
+          this.carregarListas()
+          this.$q.notify({
+            message: 'Donit!',
+            color: 'positive',
+            icon: 'done_all',
+            timeout: 1000,
+            progress: true
+          })
+          this.form = false
+        })
     },
     inserirLista (list) {
       const selected = this.categories.find(el => el.id == list.type)
@@ -174,11 +194,17 @@ export default {
     },
     carregarListas () {
       this.$q.loading.show('Carregando listas...')
+      for(let i = 0; i < this.categories.length; i++) {
+        this.categories[i].lists = []
+      }
       listasService.get()
         .then(response => {
           const lists = response.data
           for (let i = 0; i < lists.length; i++) {
             this.inserirLista(lists[i])
+            if (this.edit && lists[i].id == this.selectedList.id) {
+              this.selectedList = lists[i]
+            }
           }
           this.$q.loading.hide()
         })
@@ -192,6 +218,10 @@ export default {
             })
           }
         })
+    },
+    editLista () {
+      this.edit = true
+      this.form = true
     }
   }
 }

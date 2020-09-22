@@ -8,28 +8,29 @@
     <q-card-section>
       <q-form class="q-gutter-md row" @submit="salvarLista">
         <q-input v-model="name" label="Nome" class="col-12 q-ml-sm" filled />
+        <q-input v-model="desc" label="Descrição" type="textarea" class="col-12 q-ml-sm" filled  />
         <q-field 
           borderless
           stack-label
           label="Selecionar categoria *"
           class="col-12 q-ml-sm q-pa-sm"
-          :rules="[categoryRequired]"
+          :rules="[typeRequired]"
         >
           <template v-slot:control>
             <div class="fit row wrap justify-around items-start content-start q-mt-xl">
               <q-btn 
-                v-for="category in categories" 
-                :flat="selectedCategory != category.id"
-                :key="category.id" 
-                :icon="category.icon" 
-                :color="selectedCategory == category.id ? 'primary' : 'white'"
-                :text-color="selectedCategory == category.id ? 'white' : 'grey'"
-                @click="selectedCategory = category.id"
+                v-for="type in categories" 
+                :flat="selectedType != type.id"
+                :key="type.id" 
+                :icon="type.icon" 
+                :color="selectedType == type.id ? 'primary' : 'white'"
+                :text-color="selectedType == type.id ? 'white' : 'grey'"
+                @click="selectedType = type.id"
                 size="1.2rem"
                 class="col-2 q-mx-sm"
               >
-                <q-tooltip class="text-subtitle1" :content-class="selectedCategory == category.id ? 'bg-primary' : null">
-                  {{ category.label }}
+                <q-tooltip class="text-subtitle1" :content-class="selectedType == type.id ? 'bg-primary' : null">
+                  {{ type.label }}
                 </q-tooltip>
               </q-btn>
             </div>
@@ -44,37 +45,40 @@
 </template>
 
 <script>
+import listasService from '../services/listasService'
+
 export default {
   props: {
-    categories: Array
+    categories: Array,
+    item: Object
   },
   data () {
     return {
       id: null,
       name: '',
-      selectedCategory: null
+      selectedType: null,
+      desc: ''
     }
   },
   mounted () {
+    if (this.item.edit) {
+      this.id = this.item.id
+      this.name = this.item.name
+      this.selectedType = this.item.type
+      this.desc = this.item.desc
+    }
   },
   methods: {
     salvarLista () {
-      this.$q.notify({
-        message: 'Tarefa cadastrada com sucesso',
-        color: 'positive',
-        icon: 'done_all',
-        timeout: 1000,
-        progress: true
-      })
       this.$emit('salvarLista', {
         id: this.id,
         name: this.name,
-        category: this.selectedCategory,
-        tarefas: []
+        type: this.selectedType,
+        desc: this.desc
       })
     },
-    categoryRequired (val) {
-      return this.selectedCategory != null || 'Favor selecionar uma categoria para a lista.'
+    typeRequired (val) {
+      return this.selectedType != null || 'Favor selecionar uma categoria para a lista.'
     }
   }
 }

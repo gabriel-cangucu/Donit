@@ -37,25 +37,25 @@ module.exports = {
                         return data;
                     }
                 });
-
-            var info = [];
-            for (var i in result) {
-                info.push({
-                    id: result[i].taskId,
-                    name: result[i].name
-                });
-            }
-            return info;
+            return result;
+            // var info = [];
+            // for (var i in result) {
+            //     info.push({
+            //         id: result[i].taskId,
+            //         name: result[i].name
+            //     });
+            // }
+            // return info;
 
         } catch (erro) {
             return false;
         }
     },
 
-    async create(list, name, desc, prio, conclusion, creation) {
+    async create(list, name, desc, prio, conclusion, dueDate, creation) {
         try {
             const task = new TaskDao(connection);
-            const result = await task.create(list, name, desc, prio, conclusion, creation)
+            const result = await task.create(list, name, desc, prio, conclusion, dueDate, creation)
                 .then(data => {
                     if (data) {
                         return true;
@@ -69,10 +69,10 @@ module.exports = {
         }
     },
 
-    async update(taskId, name, description, priority, conclusiondate, creation) {
+    async update(taskId, name, description, priority, conclusiondate, dueDate, creation) {
         try {
             const task = new TaskDao(connection);
-            const result = await task.update(taskId, name, description, priority, conclusiondate, creation)
+            const result = await task.update(taskId, name, description, priority, conclusiondate, dueDate, creation)
                 .then(data => {
                     if (data) {
                         console.log(data); //

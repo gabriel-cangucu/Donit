@@ -26,22 +26,22 @@ class TaskDao {
         });
     }
 
-    create(list, name, desc, prio, conclusion, creation) {
+    create(list, name, desc, prio, conclusion, dueDate, creation) {
         return new Promise((resolve, reject) => {
-            const sql = 'INSERT INTO tasks SET listId=?, descTask=?, creationDate=?, conclusionDate=?, name=?, priority=?';
+            const sql = 'INSERT INTO tasks SET listId=?, descTask=?, creationDate=?, conclusionDate=?, name=?, priority=?, dueDate=?';
 
-            this._connection.query(sql, [list, desc, creation, conclusion, name, prio], (erro, result) => {
+            this._connection.query(sql, [list, desc, creation, conclusion, name, prio, dueDate], (erro, result) => {
                 if (erro) return reject('Creation Error!');
                 return resolve(result);
             });
         });
     }
 
-    update(id, name, description, prio, conclusion, creation) {
+    update(id, name, description, prio, conclusion, dueDate, creation) {
         return new Promise((resolve, reject) => {
-            const sql = 'UPDATE tasks SET descTask=?, conclusionDate=?, creationDate=?, name=?, priority=? WHERE taskId= ?';
+            const sql = 'UPDATE tasks SET descTask=?, conclusionDate=?, creationDate=?, name=?, priority=?, dueDate=? WHERE taskId= ?';
 
-            this._connection.query(sql, [description, conclusion, creation, name, prio, id], (erro, result) => {
+            this._connection.query(sql, [description, conclusion, creation, name, prio, dueDate, id], (erro, result) => {
                 if (erro) {
                     console.log(erro); //
                     return reject('Creation Error!');

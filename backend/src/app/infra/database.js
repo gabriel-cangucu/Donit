@@ -56,7 +56,7 @@ class Database {
      }
 
      createTableTasks() {
-         const table = 'CREATE TABLE IF NOT EXISTS donit.tasks (taskId INT NOT NULL AUTO_INCREMENT, listId INT NOT NULL, descTask VARCHAR(8000) NOT NULL, creationDate DATE NOT NULL, conclusionDate DATE NULL, done TINYINT(1) NOT NULL DEFAULT 0, name VARCHAR(100) NULL, priority VARCHAR(100) NULL, PRIMARY KEY (taskid), FOREIGN KEY (listId) REFERENCES lists(listId))';
+         const table = 'CREATE TABLE IF NOT EXISTS donit.tasks (taskId INT NOT NULL AUTO_INCREMENT, listId INT NOT NULL, descTask VARCHAR(8000) NOT NULL, creationDate DATE NOT NULL, conclusionDate DATE NULL, dueDate DATE NULL, done TINYINT(1) NOT NULL DEFAULT 0, name VARCHAR(100) NULL, priority VARCHAR(100) NULL, PRIMARY KEY (taskid), FOREIGN KEY (listId) REFERENCES lists(listId) ON DELETE CASCADE)';
 
          this.connection.query(table, erro => {
              if (erro) {

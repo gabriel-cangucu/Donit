@@ -57,7 +57,7 @@ class ListDao {
         return new Promise((resolve, reject) => {
             const sql = 'DELETE FROM lists WHERE listid= ?';
 
-            this._connection.query(sql, [listid], (error) => {
+            this._connection.query(sql, [listid, listid], (error) => {
                 if (error) return reject('List not found');
                 return resolve(true);
             });

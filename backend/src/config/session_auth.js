@@ -38,20 +38,20 @@ module.exports = (app) => {
         }
     ));
 
-    //Serialização de usuário
+    //Serializaï¿½ï¿½o de usuï¿½rio
     passport.serializeUser((user, done) => {
         const userSession = {
-            id: user.Id
+            id: user.userId
         };
         done(null, userSession);
     });
 
-    //Desserialização de usuário
+    //Desserializaï¿½ï¿½o de usuï¿½rio
     passport.deserializeUser((userSession, done) => {
         done(null, userSession);
     });
 
-    //Configuração da sessão
+    //Configuraï¿½ï¿½o da sessï¿½o
     app.use(sessao({
         secret: 'birthday cake',
         genid: function (req) {

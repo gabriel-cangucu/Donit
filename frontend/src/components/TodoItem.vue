@@ -1,10 +1,10 @@
 <template>
   <q-item tag="label" v-ripple class="q-my-sm bg-white">
     <q-item-section avatar>
-      <q-checkbox v-model="done" :color="priority_color" keep-color>
+      <q-checkbox :value="done" @input="update" :color="priority_color" keep-color>
         <q-tooltip>
           <div v-if="done">
-            Concluído em {{ conclusion_date }}
+            Concluído em {{ conclusionDate }}
           </div>
           <div v-else>
             Marcar como concluído
@@ -14,7 +14,7 @@
     </q-item-section>
     <q-item-section>
       <q-item-label :class="done ? 'text-strike text-grey-8' : null">{{ name }}</q-item-label>
-      <q-item-label caption :class="done ? 'text-strike' : null">{{ description }}</q-item-label>
+      <q-item-label caption :class="done ? 'text-strike' : null">{{ desc }}</q-item-label>
     </q-item-section>
     <q-item-section side>
       <div class="row no-wrap">
@@ -46,31 +46,25 @@ export default {
   props: [
     'id',
     'name',
-    'description',
-    'done',
+    'desc',
     'priority',
-    'creation_date',
-    'conclusion_date',
-    'due_date'
+    'creationDate',
+    'conclusionDate',
+    'dueDate'
   ],
   data () {
     return {
     }
   },
-  watch: {
-    done (val) {
-      if (val) {
-        this.conclusion_date = new Date()
-      }
-      this.$emit('update', val)
-    }
-  },
   computed: {
     days_left () {
-      return this.done ? null : date.getDateDiff(this.due_date, new Date(), 'days')
+      return this.dueDate != null && this.conclusionDate == null ? date.getDateDiff(this.dueDate, new Date(), 'days') : null
     },
     priority_color () {
       return this.priority === 1 ? 'primary' : this.priority === 2 ? 'warning' : 'red'
+    },
+    done () {
+      return this.conclusionDate != null
     }
   },
   methods: {
@@ -79,6 +73,9 @@ export default {
     },
     edit () {
       this.$emit('edit')
+    },
+    update(val) {
+      this.$emit('update')
     }
   }
 }

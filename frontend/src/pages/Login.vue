@@ -9,7 +9,7 @@
                 <q-icon class="logo__icon" name="done_all" size="8em" style="background-color: #407bff; color: white;" />
                 <p style="font-size: 1.7em;" class="col-12"><span style="font-weight: 600;">Donit</span><br>Um novo jeito de se organizar</p>
               </div>
-              <q-form class="full-width q-px-md column wrap justify-center items-center content-center" @submit="realizarLogin" >
+              <q-form class="full-width q-px-md column wrap justify-center items-center content-center" @submit="realizarLogin" ref="form_login" >
                 <div class="q-py-md full-width">
                   <q-input outlined standout="bg-primary text-white" v-model="email" label="E-mail" :rules="[ruleFieldNotEmpty]" />
                 </div>
@@ -21,9 +21,9 @@
                     Clique para logar
                   </q-tooltip>
                 </q-btn>
-                <div>
+                <div class="q-mt-md">
                   <p class="link__cadastro text-primary" @click="cadastro = true">
-                    Ainda não tem cadastro?
+                    <span class="text-grey">Não possui cadastro?</span> Crie uma conta!
                     <q-tooltip anchor="bottom middle" self="top middle">
                       Clique para se cadastrar
                     </q-tooltip>
@@ -95,7 +95,7 @@ export default {
       this.loading = true
       loginService.login({
         email: this.email,
-        pass: this.pass
+        password: this.pass
       })
         .then((response) => {
           this.$q.notify({
@@ -120,7 +120,7 @@ export default {
       loginService.cadastro({
         email: this.email,
         name: this.name,
-        pass: this.pass
+        password: this.pass
       })
         .then((response) => {
           this.$q.notify({
@@ -130,6 +130,13 @@ export default {
           })
           this.cadastro = false
           this.loading = false
+          this.email = null
+          this.name = null
+          this.pass = null
+          this.confirmaSenha = null
+          this.$nextTick(() => {
+            this.$refs.form_login.resetValidation()
+          })
         })
         .catch(err => {
           this.$q.notify({
@@ -157,7 +164,7 @@ export default {
 }
 
 .main__card {
-  height: 70vh;
+  height: 80vh;
   font-size: larger;
   text-align: center;
 }

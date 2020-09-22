@@ -42,16 +42,12 @@ class TaskControl {
             const list = req.query.listId;
             const name = req.body.name;
             const desc = req.body.desc;
-            var creation = new Date;
-            if (req.body.priority) {
-                var prio = req.body.priority;
-            }
-            else var prio = null;
-            if (req.body.conclusiondate) {
-                var conclusion = req.body.conclusiondate;
-            }
-            else var conclusion = null;
-            const result = await taskManag.create(list, name, desc, prio, conclusion, creation);
+            const creation = new Date();
+            const prio = req.body.priority || null;
+            const conclusion = req.body.conclusiondate;
+            const dueDate = req.body.dueDate != null ? new Date(req.body.dueDate) : null;
+
+            const result = await taskManag.create(list, name, desc, prio, conclusion, dueDate, creation);
             if (result) {
                 return resp.status(200).send("sucesso");
             }
@@ -65,11 +61,13 @@ class TaskControl {
         return async function (req, resp) {
             const id = req.query.taskId;
             const name = req.body.name;
-            const description = req.body.description;
-            var creation = req.body.creation;
-            var prio = req.body.priority;
-            var conclusion = req.body.conclusiondate;
-            const result = await taskManag.update(id, name, description, prio, conclusion, creation);
+            const description = req.body.desc;
+            const creation = req.body.creationDate;
+            const prio = req.body.priority;
+            const conclusion = req.body.conclusionDate != null ? new Date(req.body.conclusionDate) : null;
+            const dueDate = req.body.dueDate != null ? new Date(req.body.dueDate) : null;
+
+            const result = await taskManag.update(id, name, description, prio, conclusion, dueDate, creation);
             if (result) {
                 return resp.status(200).send("sucesso");
             }
@@ -84,7 +82,7 @@ class TaskControl {
             const id = req.query.taskId;
             const result = await taskManag.delete(id);
             if (result) {
-                return resp.status(204);
+                return resp.status(204).send('');
             }
             else {
                 return resp.status(500).send("Nao foi possivel excluir a tarefa");

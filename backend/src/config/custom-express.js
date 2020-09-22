@@ -9,7 +9,7 @@ global.authenticationMiddleware = () => {
         if (req.isAuthenticated()) {
             return next();
         }
-        res.redirect('/donit');
+        res.send(401, 'Usuário sem acesso!');
     }
 };
 
