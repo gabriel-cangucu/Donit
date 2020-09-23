@@ -1,12 +1,31 @@
-const Control = require("../controller/control.js");
-const control = new Control();
+const initControl = require("../controller/initController.js");
+const begin = new initControl();
+const listControl = require("../controller/listController.js");
+const list = new listControl();
+const taskControl = require("../controller/taskController.js");
+const task = new taskControl();
 
 module.exports = (app) => {
-    const controlRoutes = Control.routes();
+    const beginRoutes = initControl.routes();
+    const listRoutes = listControl.routes();
+    const taskRoutes = taskControl.routes();
 
-    app.get(controlRoutes.donit, control.mainPage());
-    app.post(controlRoutes.donit, control.login());
-    app.get(controlRoutes.home, global.authenticationMiddleware(), control.home());
-    app.get(controlRoutes.signin, control.register());
-    app.post(controlRoutes.signin, control.signIn());
+    app.get(beginRoutes.donit, begin.mainPage());
+    app.post(beginRoutes.donit, begin.login());
+    app.get(beginRoutes.signin, begin.register());
+    app.post(beginRoutes.signin, begin.signIn());
+
+    //app.get(listRoutes.home, global.authenticationMiddleware(), list.home());
+    app.get(listRoutes.listall, global.authenticationMiddleware(), list.getAll());
+
+    app.post(listRoutes.list, global.authenticationMiddleware(), list.createList());
+    app.delete(listRoutes.list, global.authenticationMiddleware(), list.deleteList());
+    app.put(listRoutes.list, global.authenticationMiddleware(), list.updateList());
+
+    app.get(taskRoutes.task, global.authenticationMiddleware(), task.exhibitTask());
+    app.get(taskRoutes.list, global.authenticationMiddleware(), task.listTasks());
+    app.post(taskRoutes.task, global.authenticationMiddleware(), task.createTask());
+    app.put(taskRoutes.task, global.authenticationMiddleware(), task.updateTask());
+    app.delete(taskRoutes.task, global.authenticationMiddleware(), task.deleteTask());
+
 }

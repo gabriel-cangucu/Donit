@@ -9,7 +9,7 @@ connection.connect((erro) => {
 
         Database.init(connection);
         const app = customExpress();
-        app.listen(8080, function () { console.log('Sever up! Port 8080') });
+        app.listen(8080, function () { console.log('Server up! Port 8080') });
     }
 });
 

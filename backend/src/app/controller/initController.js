@@ -1,12 +1,11 @@
 const path = require('path');
 const userManag = require('../model/user_management.js');
 
-class Control {
+class InitControl {
 
     static routes() {
         return {
             donit: "/donit",
-            home: "/home",
             signin: "/signin"
         }
     }
@@ -19,11 +18,10 @@ class Control {
 
     login() {
         return function (req, resp, next) {
-            console.log(req.body); //
             const passport = req.passport;
             passport.authenticate('local', (erro, user, info) => {
                 if (info) {
-                    return resp.send("Email ou senha incorretos");  // trocar por pagina do front
+                    return resp.send(404, "Email ou senha incorretos");  // trocar por pagina do front
                 }
                 if (erro) {
                     return next(erro);
@@ -49,25 +47,20 @@ class Control {
         return async function (req, resp) {
             const name = req.body.name;
             const email = req.body.email;
-            const pass = req.body.pass;
+            const pass = req.body.password;
             const result = await userManag.userRegister(name, email, pass);
             if (result == true) {
-                return resp.marko(templates.home);
+                return resp.send(200, "Usu√°rio registrado com sucesso.");
             }
             else if (result == 0) {
-                return resp.marko(templates.register, { messageerro: "J· existe uma conta com este email." });
+                return resp.send(409, "J√° existe uma conta com este email.");
             }
             else {
-                return resp.marko(templates.register, { messageerro: "N„o foi possÌvel realizar o cadastro." });
+                return resp.send(500, "N√£o foi poss√≠vel realizar o cadastro.");
             }
         }
     }
-
-    home() {
-        return function (req, resp) {
-            return resp.send("home"); //trocar por pagina do front
-        }
-    }
+    
 }
 
-module.exports = Control;
+module.exports = InitControl;
